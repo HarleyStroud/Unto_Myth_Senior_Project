@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MainMenu : MonoBehaviour
 {
+
+    public GameObject optionsScreen;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,11 +26,13 @@ public class MainMenu : MonoBehaviour
     public void OpenOptions()
     {
         Debug.Log("Open Options button pressed.");
+        optionsScreen.SetActive(true);
     }
 
     public void CloseOptions()
     {
         Debug.Log("Close Options button pressed.");
+        optionsScreen.SetActive(false);
     }
 
 

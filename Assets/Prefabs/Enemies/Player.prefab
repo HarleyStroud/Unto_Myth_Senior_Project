@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 381666164923575797}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 66, y: 64, z: 1}
+  m_LocalScale: {x: 56.7798, y: 47.25354, z: 1}
   m_Children: []
   m_Father: {fileID: 472706152924224738}
   m_RootOrder: 0
@@ -131,3 +131,4 @@ MonoBehaviour:
   damage: 5
   maxHP: 25
   currentHP: 25
+  armor: 0

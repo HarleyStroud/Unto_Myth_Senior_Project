@@ -8,8 +8,8 @@ public class CardDatabase : MonoBehaviour
 
     private void Awake()
     {
-        cardList.Add(new Card(0, "Attack", 1, 5, "Attack Card description", Resources.Load<Sprite>("1")));
-        cardList.Add(new Card(1, "Defend", 1, 5, "Defend Card description", Resources.Load<Sprite>("2")));
+        cardList.Add(new Card(0, "Attack", 1, 5, "Deal 5 Damage", Resources.Load<Sprite>("1")));
+        cardList.Add(new Card(1, "Defend", 1, 5, "Gain 5 Armor", Resources.Load<Sprite>("2")));
     }
 
 }

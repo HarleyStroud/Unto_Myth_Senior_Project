@@ -9,18 +9,22 @@ public class CardToHand : MonoBehaviour
 
 
     // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    void Start(){}
 
     // Update is called once per frame
     void Update()
     {
         Hand = GameObject.Find("PlayerArea");
-        it.transform.SetParent(Hand.transform);
-        it.transform.localScale = Vector3.one;
-        //it.transform.position = new Vector3(transform.position.x, transform.position.y - 48);
-        it.transform.eulerAngles = new Vector3(25, 0, 0);
+
+        if(it.tag =="First")
+        {
+            it.transform.SetParent(Hand.transform);
+            it.transform.localScale = Vector3.one;
+            //it.transform.position = new Vector3(transform.position.x, transform.position.y - 48);
+            it.transform.eulerAngles = new Vector3(25, 0, 0);
+
+            it.tag = "Untagged";
+        }
+       
     }
 }

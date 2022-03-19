@@ -4,20 +4,51 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
+    public string unitType;
     public string unitName;
-    public int unitLevel;
 
-    public int damage;
+    public float damage;
 
-    public int maxHP;
-    public int currentHP;
+    public float maxHP;
+    public float currentHP;
 
-    public int armor;
+    public float armor;
+    public string intention;
 
 
-    public bool TakeDamage(int dmg)
+    private void Start()
     {
-        currentHP -= dmg;
+        
+    }
+
+
+    public bool TakeDamage(float dmg)
+    {
+        float damageAfterArmor = dmg;
+        if(armor > 0)
+        {
+            if(dmg > armor)
+            {
+                dmg = dmg - armor;
+                armor = 0;
+
+                if (dmg > 0)
+                {
+                    currentHP -= dmg;
+                }
+            }
+            else
+            {
+                armor = armor - dmg;
+            }
+
+            
+        }
+        
+        else
+        {
+            currentHP -= dmg;
+        }
 
         if(currentHP <= 0)
         {
@@ -27,5 +58,10 @@ public class Unit : MonoBehaviour
         {
             return false;
         }
+    }
+
+    public void GainBlock(float block)
+    {
+        armor += block;
     }
 }

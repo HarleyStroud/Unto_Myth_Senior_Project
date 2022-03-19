@@ -4,19 +4,19 @@ using UnityEngine;
 
 public class PlayerDeck : MonoBehaviour
 {
-
     public List<Card> deck = new List<Card>();
     public List<Card> container = new List<Card>();
     public static List<Card> staticDeck = new List<Card>();
 
-    public int x;
+    public int totalDeckSize;
     public static int deckSize;
+    
+    public int cardDrawPerTurn;
 
     public GameObject cardInDeck1;
     public GameObject cardInDeck2;
     public GameObject cardInDeck3;
     public GameObject cardInDeck4;
-
 
     public GameObject CardBack;
     public GameObject Deck;
@@ -29,18 +29,11 @@ public class PlayerDeck : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        initDeck();
 
-        x = 0;
-        deckSize = 40;
+        cardDrawPerTurn = 5;
 
-        for(int i =0; i < deckSize; i++)
-        {
-            x = Random.Range(0, 2);
-            deck[i] = CardDatabase.cardList[x];
-        }
-
-        StartCoroutine(StartGame());
-        
+        StartCoroutine(Draw(cardDrawPerTurn));
     }
 
     // Update is called once per frame
@@ -48,21 +41,27 @@ public class PlayerDeck : MonoBehaviour
     {
         staticDeck = deck;
 
-        if(deckSize < 20)
+        if(deckSize < 4)
         {
             cardInDeck4.SetActive(false);
         }
-        if(deckSize < 10)
+        if(deckSize < 3)
         {
             cardInDeck3.SetActive(false);
         }
-        if(deckSize < 5)
+        if(deckSize < 2)
         {
             cardInDeck2.SetActive(false);
         }
         if (deckSize < 1)
         {
             cardInDeck1.SetActive(false);
+        }
+
+        if(TurnSystem.startTurn)
+        {
+            StartCoroutine(Draw(cardDrawPerTurn));
+            TurnSystem.startTurn = false;
         }
     }
 
@@ -79,10 +78,9 @@ public class PlayerDeck : MonoBehaviour
 
         GameObject cardBackClone = Instantiate(CardBack, transform.position, transform.rotation);
         cardBackClone.tag = "Clone";
-/*        cardBackClone.SetActive(false);*/     
+    
         StartCoroutine(Example());
     }
-
 
     IEnumerator Example()
     {
@@ -95,16 +93,55 @@ public class PlayerDeck : MonoBehaviour
         }
     }
 
-
-    
-
-
-    IEnumerator StartGame()
+    public void initDeck()
     {
-        for(int i = 0; i <= 4; i++)
+        int x = 0;
+        totalDeckSize = 10;
+        deckSize = totalDeckSize;
+
+        for(int i =0; i < deckSize; i++)
         {
-            yield return new WaitForSeconds(1);
-            Instantiate(CardToHand, transform.position, transform.rotation);
+            x = Random.Range(0, 2);
+            deck[i] = CardDatabase.cardList[x];
         }
+
+        Debug.Log("initDeck ---  totalDeckSize: " + totalDeckSize + "  ,  deckSize: " + deckSize);
+    }
+
+   
+
+
+    IEnumerator Draw(int numOfCards)
+    {
+        for(int i =0; i < numOfCards; i++)
+        {
+
+            if(deckSize == 0)
+            {
+                ResetDeck();
+            }
+
+            yield return new WaitForSeconds(0.75f);
+            Instantiate(CardToHand, transform.position, transform.rotation);
+
+            Debug.Log("Draw " + numOfCards + " ---  Drawing card :  " + i  + "  ,  cards left: " + deckSize);
+        }
+    }
+
+
+    public void ResetDeck()
+    {
+        deckSize = totalDeckSize;
+        GameObject Graveyard = GameObject.Find("Graveyard");
+
+        foreach(Transform child in Graveyard.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        cardInDeck1.SetActive(true);
+        cardInDeck2.SetActive(true);
+        cardInDeck3.SetActive(true);
+        cardInDeck4.SetActive(true);
     }
 }

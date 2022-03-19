@@ -126,8 +126,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 733f2f55193281d45ab8ed456d0900da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unitType: Enemy
   unitName: Harpy
-  unitLevel: 1
   damage: 5
   maxHP: 25
   currentHP: 25

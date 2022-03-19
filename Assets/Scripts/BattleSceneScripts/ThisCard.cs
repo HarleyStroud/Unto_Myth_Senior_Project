@@ -8,8 +8,10 @@ using TMPro;
 
 public class ThisCard : MonoBehaviour
 {
+    public GameObject battleSystem;
     public List<Card> thisCard = new List<Card>();
     public int thisId;
+
 
     public int id;
     public string cardName;
@@ -33,12 +35,17 @@ public class ThisCard : MonoBehaviour
     public int numberOfCardsInDeck;
 
 
+    public GameObject Graveyard;
+    public bool inGraveyard;
+
+
 
     // Start is called before the first frame update
     void Start()
     {
         thisCard[0] = CardDatabase.cardList[thisId];
         numberOfCardsInDeck = PlayerDeck.deckSize;
+       
 
         
     }
@@ -48,8 +55,9 @@ public class ThisCard : MonoBehaviour
     void Update()
     {
         PlayerArea = GameObject.Find("PlayerArea");
+        battleSystem = GameObject.Find("BattleSystem");
 
-        if(this.transform.parent == PlayerArea.transform.parent)
+        if (this.transform.parent == PlayerArea.transform.parent)
         {
             cardBack = false;
         }
@@ -79,11 +87,58 @@ public class ThisCard : MonoBehaviour
 
         if(this.tag == "Clone")
         {
-            thisCard[0] = PlayerDeck.staticDeck[numberOfCardsInDeck - 1];
-            numberOfCardsInDeck -= 1;
-            PlayerDeck.deckSize -= 1;
-            cardBack = false;
-            this.tag = "Untagged";
+            if(PlayerDeck.deckSize != 0)
+            {
+                thisCard[0] = PlayerDeck.staticDeck[numberOfCardsInDeck - 1];
+                numberOfCardsInDeck -= 1;
+                PlayerDeck.deckSize -= 1;
+                cardBack = false;
+                this.tag = "First";
+            }
+        } 
+
+        if(TurnSystem.currentMana >= cost)
+        {
+          //  gameObject.GetComponent<DragDrop>().enabled = true;
         }
+        else
+        {
+            // gameObject.GetComponent<DragDrop>().enabled = false;
+        }
+    }
+
+
+    public void PlayCard()
+    {
+        BattleSystem battle = (BattleSystem)battleSystem.GetComponent("BattleSystem");
+        if (cardName == "Attack")
+        {
+            battle.playerAttack();
+        }
+        else if (cardName == "Defend")
+        {
+            battle.playerBlock();
+        }
+    }
+
+    public void Discard()
+    {
+        
+       
+        StartCoroutine(MoveToGraveyard());
+    }
+
+
+
+    IEnumerator MoveToGraveyard()
+    {
+        yield return new WaitForSeconds(0.5f);
+        Graveyard = GameObject.Find("Graveyard");
+        Draggable d = GetComponent<Draggable>();
+        d.parentToReturnTo = Graveyard.transform;
+        d.enabled = false;
+
+        this.transform.SetParent(Graveyard.transform);
+        inGraveyard = true;
     }
 }

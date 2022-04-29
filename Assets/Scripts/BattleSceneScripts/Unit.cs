@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
+    private FlashScript flashEffect;
+
     public string unitType;
     public string unitName;
 
@@ -13,8 +15,17 @@ public class Unit : MonoBehaviour
     public float currentHP;
 
     public float armor;
-    public string intention;
 
+    public int gold;
+
+    public int maxFaith;
+    public int currentFaith;
+
+
+    private void Awake()
+    {
+        flashEffect = gameObject.GetComponent<FlashScript>();
+    }
 
     private void Start()
     {
@@ -24,6 +35,7 @@ public class Unit : MonoBehaviour
 
     public bool TakeDamage(float dmg)
     {
+        flashEffect.Flash();
         float damageAfterArmor = dmg;
         if(armor > 0)
         {
@@ -41,10 +53,7 @@ public class Unit : MonoBehaviour
             {
                 armor = armor - dmg;
             }
-
-            
         }
-        
         else
         {
             currentHP -= dmg;
@@ -64,4 +73,15 @@ public class Unit : MonoBehaviour
     {
         armor += block;
     }
+
+
+    public void GainGold(int gold)
+	{
+       this.gold = gold;
+	}
+
+    public int GetGold()
+	{
+        return this.gold;
+	}
 }

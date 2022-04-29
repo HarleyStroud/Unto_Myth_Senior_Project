@@ -10,18 +10,15 @@ public class BattleHUD : MonoBehaviour
     public Text enemyIntention;
     public Text block;
     public GameObject shield;
-
-
+    public Text maxFaithText;
+    public Text currentFaithText;
 
     void Update()
     {
-        if(!TurnSystem.isPlayerTurn)
-        {
-            
-        }
+
     }
 
-
+    // Initialize HUD values for player and enemy health.
     public void SetHUD(Unit unit)
     {
         if (unit.armor <= 0)
@@ -32,7 +29,7 @@ public class BattleHUD : MonoBehaviour
         {
             shield.SetActive(true);
         }
-        SetEnemyIntention(unit);
+        
         HealthBar.fillAmount = unit.currentHP / unit.maxHP;
         healthText.text = unit.currentHP.ToString();
     }
@@ -53,6 +50,8 @@ public class BattleHUD : MonoBehaviour
         HealthBar.fillAmount = unit.currentHP / unit.maxHP;
     }
 
+
+    // Enable block icon on units health bar and update the units armor.
     public void setBlock(Unit unit)
     {
         if (unit.armor <= 0)
@@ -66,14 +65,29 @@ public class BattleHUD : MonoBehaviour
         block.text = unit.armor.ToString();
     }
 
-
-    public void SetEnemyIntention(Unit unit)
+    public void SetMaxFaith(Unit unit)
     {
-        if (unit.unitType == "Enemy")
-        {
-            enemyIntention.text = unit.intention + "( " + unit.damage + " )";
-        }
+        maxFaithText.text = " / " +  unit.maxFaith.ToString();
+    }
 
+    public void SetCurrentFaith(Unit unit)
+    {
+       currentFaithText.text = unit.currentFaith.ToString();
+    }
+
+
+    public void SetEnemyIntention(EnemyAI enemy)
+    {
+        if(enemy.intention == "Attack")
+        {
+            enemyIntention.text = enemy.damage.ToString();
+        }
+        else
+		{
+            // Hardcoding block value for presentation. Will change later.
+            enemyIntention.text = 5.ToString();
+        }
+       
     }
 
  

@@ -5,10 +5,15 @@ using UnityEngine.EventSystems;
 
 public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
 {
+    public GameObject player;
+    public Unit playerUnit;
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if(eventData.pointerDrag == null)
+        player = GameObject.Find("Player(Clone)");
+        playerUnit = (Unit)player.GetComponent("Unit");
+
+        if (eventData.pointerDrag == null)
         {
             return;
         }
@@ -17,7 +22,10 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
         if(d!=null)
         {
-            d.placeholderParent = this.transform;
+            if(playerUnit.currentFaith > 0)
+			{
+                d.placeholderParent = this.transform;
+            }
         }
     }
 
@@ -46,16 +54,17 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
         if (d != null)
         {
-
-            d.parentToReturnTo = this.transform;
-
-            if(this.name == "Drop Zone")
+            if (playerUnit.currentFaith > 0)
             {
-              
-                card.PlayCard();
-                card.Discard();
+                d.parentToReturnTo = this.transform;
+
+                if (this.name == "Drop Zone")
+                {
+                    card.PlayCard();
+                    card.Discard();
+                }
+                Debug.Log("Drop transform: :" + this.name);
             }
-            Debug.Log("Drop transform: :" + this.name);
         }
     }
     

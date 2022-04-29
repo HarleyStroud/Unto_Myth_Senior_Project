@@ -96,20 +96,25 @@ public class PlayerDeck : MonoBehaviour
     public void initDeck()
     {
         int x = 0;
-        totalDeckSize = 10;
+        totalDeckSize = 8;
         deckSize = totalDeckSize;
 
-        for(int i =0; i < deckSize; i++)
-        {
-            x = Random.Range(0, 2);
-            deck[i] = CardDatabase.cardList[x];
-        }
+        deck[0] = CardDatabase.cardList[0];
+        deck[1] = CardDatabase.cardList[0];
+        deck[2] = CardDatabase.cardList[0];
+        deck[3] = CardDatabase.cardList[0];
+
+        deck[4] = CardDatabase.cardList[1];
+        deck[5] = CardDatabase.cardList[1];
+        deck[6] = CardDatabase.cardList[1];
+        deck[7] = CardDatabase.cardList[1];
+
+        Shuffle();
 
         Debug.Log("initDeck ---  totalDeckSize: " + totalDeckSize + "  ,  deckSize: " + deckSize);
     }
 
    
-
 
     IEnumerator Draw(int numOfCards)
     {

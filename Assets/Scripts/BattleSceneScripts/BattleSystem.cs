@@ -6,25 +6,37 @@ using UnityEngine.UI;
 public enum BattleState { START, PLAYERTURN, ENEMYTURN, WON, LOST }
 
 public class BattleSystem : MonoBehaviour
-
-    
 {
-
     public GameObject playerPrefab;
     public GameObject enemyPrefab;
 
     public Transform playerBattleStation;
     public Transform enemyBattleStation;
+
     public TurnSystem turnSystem;
     public Text turnText;
+    public Text goldDisplay;
+    public TopHUDController topHUDController;
+    public GameObject cardSelector;
+    public GameObject endTurnBtn;
+
+    public GameObject shieldIntention;
+    public GameObject attackIntention;
+
+    public GameObject playerStation;
 
     public BattleState state;
 
     Unit playerUnit;
-    Unit enemyUnit;
+    EnemyAI enemyUnit;
 
     public BattleHUD playerHUD;
     public BattleHUD enemyHUD;
+
+    public GameObject enemyHUDObject;
+
+    private GameObject playerGo;
+    private GameObject enemyGo;
 
     // Start is called before the first frame update
     void Start()
@@ -33,26 +45,29 @@ public class BattleSystem : MonoBehaviour
         StartCoroutine(SetupBattle());
     }
 
-
     IEnumerator SetupBattle()
     {
-        GameObject playerGo = Instantiate(playerPrefab, playerBattleStation);
+        playerGo = Instantiate(playerPrefab, playerBattleStation);
         playerUnit = playerGo.GetComponent<Unit>();
 
-        GameObject enemyGo = Instantiate(enemyPrefab, enemyBattleStation);
-        enemyUnit = enemyGo.GetComponent<Unit>();
+        enemyGo = Instantiate(enemyPrefab, enemyBattleStation);
+        enemyUnit = enemyGo.GetComponent<EnemyAI>();
 
         setEnemyIntent();
 
         playerHUD.SetHUD(playerUnit);
         enemyHUD.SetHUD(enemyUnit);
 
+        playerUnit.currentFaith = playerUnit.maxFaith;
+
+        playerHUD.SetMaxFaith(playerUnit);
+        playerHUD.SetCurrentFaith(playerUnit);
+
         yield return new WaitForSeconds(2f);
 
         state = BattleState.PLAYERTURN;
         PlayerTurn();
     }
-
 
     public void playerAttack()
     {
@@ -65,16 +80,25 @@ public class BattleSystem : MonoBehaviour
         bool isDead = enemyUnit.TakeDamage(5);
 
         enemyHUD.SetHP(enemyUnit);
+        playerHUD.SetCurrentFaith(playerUnit);
         yield return new WaitForSeconds(1.5f);
 
         if(isDead)
         {
             turnText.text = "VICTORY!";
-            turnSystem.isGameOver = true;
-        }
-        else
-        {
 
+            Destroy(enemyGo);
+            Destroy(enemyHUDObject);
+
+            playerUnit.GainGold(10);
+            topHUDController.DisplayGold(playerUnit);
+
+            playerStation.SetActive(false);
+            cardSelector.SetActive(true);
+            endTurnBtn.SetActive(false);
+
+
+            turnSystem.isGameOver = true;
         }
     }
 
@@ -83,23 +107,23 @@ public class BattleSystem : MonoBehaviour
         StartCoroutine(PlayerBlock());
     }
 
-
     IEnumerator PlayerBlock()
     {
         playerUnit.GainBlock(5f);
         playerHUD.setBlock(playerUnit);
+        playerHUD.SetCurrentFaith(playerUnit);
 
         yield return new WaitForSeconds(1.5f);
-
     }
         
     void PlayerTurn()
-    {
-        
-    }
+    {}
 
     public void EnemyTurn()
     {
+        playerUnit.currentFaith = playerUnit.maxFaith;
+        playerHUD.SetCurrentFaith(playerUnit);
+
         if(enemyUnit.intention == "Attack")
         {
             StartCoroutine(EnemyAttack());
@@ -108,7 +132,6 @@ public class BattleSystem : MonoBehaviour
         {
             StartCoroutine(EnemyDefend());
         }
-       
     }
 
 
@@ -119,10 +142,15 @@ public class BattleSystem : MonoBehaviour
         if (randomIndex == 0)
         {
             enemyUnit.intention = "Attack";
+            shieldIntention.SetActive(false);
+            attackIntention.SetActive(true);
         }
         else if (randomIndex == 1)
         {
             enemyUnit.intention = "Defend";
+            shieldIntention.SetActive(true);
+            attackIntention.SetActive(false);
+
         }
         enemyHUD.SetEnemyIntention(enemyUnit);
     }
@@ -145,5 +173,4 @@ public class BattleSystem : MonoBehaviour
         enemyHUD.setBlock(enemyUnit);
         turnSystem.endEnemyTurn();
     }
-
 }

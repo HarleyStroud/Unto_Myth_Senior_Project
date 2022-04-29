@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class EnemyAI: Unit
 {
+    public string intention;
+
     // Start is called before the first frame update
     void Start()
     {

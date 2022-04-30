@@ -7,10 +7,11 @@ public class MainMenu : MonoBehaviour
 {
 
     public GameObject optionsScreen;
+    public GameObject splashScreen;
     // Start is called before the first frame update
     void Start()
     {
-        
+        StartCoroutine(DisableSplashScreen());
     }
 
     // Update is called once per frame
@@ -42,5 +43,13 @@ public class MainMenu : MonoBehaviour
     {
         Debug.Log("Quit button pressed.");
         Application.Quit();
+    }
+
+
+    IEnumerator DisableSplashScreen()
+    {
+        yield return new WaitForSeconds(2f);
+        splashScreen.SetActive(false);
+        
     }
 }
